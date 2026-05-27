@@ -8,11 +8,11 @@ export default {
             "dbOption": {
                 "name": "motor-claims",
                 "type": "postgres",
-                "host": "localhost",
-                "port": 5432,
-                "username": "postgres",
-                "password": "decerto",
-                "database": "motor_claims",
+                "host": process.env.DB_HOST,
+                "port": process.env.DB_PORT,
+                "username": process.env.DB_USER,
+                "password": process.env.DB_PASSWORD,
+                "database": process.env.DB_NAME,
                 "schema": "public",
                 "uuidExtension": "",
                 "synchronize": false
@@ -101,11 +101,11 @@ export default {
             "mariadb_flags": "flags",
             "postgres_name": "motor-claims",
             "postgres_type": "postgres",
-            "postgres_host": "localhost",
-            "postgres_port": 5432,
-            "postgres_username": "postgres",
-            "postgres_password": "decerto",
-            "postgres_database": "motor_claims",
+            "postgres_host": process.env.DB_HOST,
+            "postgres_port": process.env.DB_PORT,
+            "postgres_username": process.env.DB_USER,
+            "postgres_password": process.env.DB_PASSWORD,
+            "postgres_database": process.env.DB_NAME,
             "postgres_schema": "public",
             "postgres_uuidExtension": "",
             "postgres_synchronize": false,
@@ -384,24 +384,24 @@ export default {
                     "value": "flags"
                 },
                 "postgres_host": {
-                    "type": "str",
-                    "value": "localhost"
+                    "type": "server_env",
+                    "value": "DB_HOST"
                 },
                 "postgres_port": {
-                    "type": "num",
-                    "value": "5432"
+                    "type": "server_env",
+                    "value": "DB_PORT"
                 },
                 "postgres_username": {
-                    "type": "str",
-                    "value": "postgres"
+                    "type": "server_env",
+                    "value": "DB_USER"
                 },
                 "postgres_password": {
-                    "type": "str",
-                    "value": "decerto"
+                    "type": "server_env",
+                    "value": "DB_PASSWORD"
                 },
                 "postgres_database": {
-                    "type": "str",
-                    "value": "motor_claims"
+                    "type": "server_env",
+                    "value": "DB_NAME"
                 },
                 "postgres_schema": {
                     "type": "str",
