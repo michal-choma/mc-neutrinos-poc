@@ -1,0 +1,13 @@
+{
+    "displayName": "mc-b2b-motor-claims-api",
+    "appName": "mc-b2b-motor-claims-api",
+    "description": "B2B Motor Claims - accident data service",
+    "lastModified": "2026-05-22T10:27:32.219Z",
+    "imgSourcePath": "",
+    "version": "1.0.0",
+    "appType": "apiOnly",
+    "templateName": "blank",
+    "createDate": "2026-05-22T10:27:30.370Z",
+    "analyticsId": "628619ee-7116-24bf-bdde-8d1129f5be6b",
+    "createdStudioVersion": "9.3.0"
+}

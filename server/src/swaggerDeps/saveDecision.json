@@ -1,0 +1,15 @@
+{
+    "/save-decision": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "saveDecision"
+            ]
+        }
+    }
+}

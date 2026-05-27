@@ -1,0 +1,200 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "type": "tab",
+        "createdDate": "2026-05-27T07:49:21.109Z",
+        "label": "getClaim",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "getClaim",
+        "relativeParentPath": ""
+    },
+    {
+        "id": "sd_rD8P2oBXBWreHNps",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "get-claim",
+        "path": "/get-claim",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "get",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 160,
+        "y": 220,
+        "wires": [
+            [
+                "sd_aWDTE6LHPKQ28EZ1"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "getClaim",
+        "functionName": "sd_rD8P2oBXBWreHNps"
+    },
+    {
+        "id": "sd_aWDTE6LHPKQ28EZ1",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "buildQuery",
+        "script": "bh.local.caseNumber = bh.input.query.case_number;\n  bh.local.selectQuery = `\n    SELECT * FROM claims WHERE case_number = '${bh.local.caseNumber}' ORDER BY id DESC LIMIT 1\n  `;",
+        "functionName": "buildQuery",
+        "category": "Function",
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "sd_7ll15ozuRGYg7Tp2"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_7ll15ozuRGYg7Tp2",
+        "type": "ExecuteSql",
+        "z": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "get-claim-sql",
+        "databaseConfig": "sd_NXdLAOeMJCyRLjWN",
+        "resultMap": {
+            "type": "bh.local",
+            "value": "rawResult"
+        },
+        "multipleQuery": "",
+        "singleQuery": {
+            "type": "bh.local",
+            "value": "selectQuery"
+        },
+        "inputs": 1,
+        "outputs": 1,
+        "params": [],
+        "dbType": "postgres",
+        "functionName": "getClaimSql",
+        "category": "Storage",
+        "x": 480,
+        "y": 220,
+        "wires": [
+            [
+                "sd_QFGvlGppS6v1NUrp"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_QFGvlGppS6v1NUrp",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "mapResult",
+        "script": " console.log('response', bh.local.rawResult)\n \n const row = bh.local.rawResult[0];\n  bh.local.response = {\n    case_number: row.case_number,\n    policy_number: row.policy_number,\n    vehicle_make: row.vehicle_make,\n    vehicle_model: row.vehicle_model,\n    vehicle_year: row.vehicle_year,\n    reserve_amount: row.reserve_amount,\n    liability_pct: row.liability_pct,\n    deductible_recovery: row.deductible_recovery,\n    recovery_applicable: row.recovery_applicable,\n    handler_decision: row.handler_decision,\n    handler_remarks: row.handler_remarks,\n    decision_status: row.handler_decision === 'approve' ? 'true' : 'false',\n    supervisor_decision: row.supervisor_decision,\n    supervisor_remarks: row.supervisor_remarks,\n    status: row.status\n  };",
+        "functionName": "mapResult",
+        "category": "Function",
+        "x": 640,
+        "y": 240,
+        "wires": [
+            [
+                "sd_BlkPwkMsqJHLbhmX"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_BlkPwkMsqJHLbhmX",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_KiA9zS38T1WPnWeS",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "out",
+        "category": "HTTP",
+        "x": 800,
+        "y": 260,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getClaim",
+        "generated": true
+    }
+]

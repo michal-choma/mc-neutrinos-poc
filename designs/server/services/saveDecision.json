@@ -1,0 +1,200 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "type": "tab",
+        "createdDate": "2026-05-27T07:45:25.506Z",
+        "label": "saveDecision",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "saveDecision",
+        "relativeParentPath": ""
+    },
+    {
+        "id": "sd_qMCpKnKYxmR2LZoV",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "save-decision",
+        "path": "/save-decision",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 180,
+        "y": 240,
+        "wires": [
+            [
+                "sd_cb58ddrDcRDu5TnV"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "saveDecision",
+        "functionName": "sd_qMCpKnKYxmR2LZoV"
+    },
+    {
+        "id": "sd_cb58ddrDcRDu5TnV",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "buildQuery",
+        "script": "const b = bh.input.body;\n  bh.local.upsertQuery = `\n    INSERT INTO claims (\n      case_number, policy_number, vehicle_make, vehicle_model, vehicle_year,\n      liability_pct, reserve_amount, deductible_recovery, recovery_applicable,\n      handler_decision, handler_remarks, supervisor_decision, supervisor_remarks, status\n    ) VALUES (\n      '${b.case_number}',\n      '${b.policy_number || ''}',\n      '${b.vehicle_make || ''}',\n      '${b.vehicle_model || ''}',\n      ${b.vehicle_year || 0},\n      ${b.liability_pct || 0},\n      ${b.reserve_amount || 0},\n      ${b.deductible_recovery || 0},\n      ${b.recovery_applicable || false},\n      '${b.handler_decision || ''}',\n      '${b.handler_remarks || ''}',\n      '${b.supervisor_decision || ''}',\n      '${b.supervisor_remarks || ''}',\n      '${b.status || 'pending'}'\n    )\n    ON CONFLICT (case_number) DO UPDATE SET\n      policy_number = CASE WHEN EXCLUDED.policy_number != '' THEN EXCLUDED.policy_number ELSE claims.policy_number END,\n      vehicle_make = CASE WHEN EXCLUDED.vehicle_make != '' THEN EXCLUDED.vehicle_make ELSE claims.vehicle_make END,\n      vehicle_model = CASE WHEN EXCLUDED.vehicle_model != '' THEN EXCLUDED.vehicle_model ELSE claims.vehicle_model END,\n      vehicle_year = CASE WHEN EXCLUDED.vehicle_year != 0 THEN EXCLUDED.vehicle_year ELSE claims.vehicle_year END,\n      reserve_amount = CASE WHEN EXCLUDED.reserve_amount != 0 THEN EXCLUDED.reserve_amount ELSE claims.reserve_amount\n  END,\n      handler_decision = CASE WHEN EXCLUDED.handler_decision != '' THEN EXCLUDED.handler_decision ELSE\n  claims.handler_decision END,\n      handler_remarks = CASE WHEN EXCLUDED.handler_remarks != '' THEN EXCLUDED.handler_remarks ELSE\n  claims.handler_remarks END,\n      supervisor_decision = CASE WHEN EXCLUDED.supervisor_decision != '' THEN EXCLUDED.supervisor_decision ELSE\n  claims.supervisor_decision END,\n      supervisor_remarks = CASE WHEN EXCLUDED.supervisor_remarks != '' THEN EXCLUDED.supervisor_remarks ELSE\n  claims.supervisor_remarks END,\n      status = EXCLUDED.status\n  `;",
+        "functionName": "buildQuery",
+        "category": "Function",
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "sd_HpAqsMs7n73x1Re5"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "saveDecision",
+        "generated": true
+    },
+    {
+        "id": "sd_HpAqsMs7n73x1Re5",
+        "type": "ExecuteSql",
+        "z": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "query-save",
+        "databaseConfig": "sd_NXdLAOeMJCyRLjWN",
+        "resultMap": {
+            "type": "bh.local",
+            "value": "rawResult"
+        },
+        "multipleQuery": "",
+        "singleQuery": {
+            "type": "bh.local",
+            "value": "upsertQuery"
+        },
+        "inputs": 1,
+        "outputs": 1,
+        "params": [],
+        "dbType": "postgres",
+        "functionName": "querySave",
+        "category": "Storage",
+        "x": 540,
+        "y": 280,
+        "wires": [
+            [
+                "sd_EUoXdunYinwzFTjO"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "saveDecision",
+        "generated": true
+    },
+    {
+        "id": "sd_EUoXdunYinwzFTjO",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "result",
+        "script": "bh.local.response = { success: true, message: 'Decision saved' };",
+        "functionName": "result",
+        "category": "Function",
+        "x": 700,
+        "y": 300,
+        "wires": [
+            [
+                "sd_SDrLADm8gc47nb1s"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "saveDecision",
+        "generated": true
+    },
+    {
+        "id": "sd_SDrLADm8gc47nb1s",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_zgcYrbsOAnXMVHkJ",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "out",
+        "category": "HTTP",
+        "x": 860,
+        "y": 320,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "saveDecision",
+        "generated": true
+    }
+]

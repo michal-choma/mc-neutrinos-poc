@@ -1,0 +1,41 @@
+{
+    "version": "2.4.2",
+    "compilerOptions": {
+        "outDir": "./build",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": false,
+        "resolveJsonModule": true,
+        "types": [
+            "node"
+        ],
+        "allowSyntheticDefaultImports": true,
+    },
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    },
+    "tsc-alias": {
+        "verbose": false,
+        "resolveFullPaths": true,
+        "fileExtensions": {
+            "inputGlob": "{js,jsx,mjs}",
+            "outputCheck": [
+                "js",
+                "json",
+                "jsx",
+                "mjs"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

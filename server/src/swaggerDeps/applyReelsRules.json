@@ -1,0 +1,15 @@
+{
+    "/apply-reels-rules": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "applyReelsRules"
+            ]
+        }
+    }
+}

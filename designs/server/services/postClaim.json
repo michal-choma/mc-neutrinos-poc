@@ -1,0 +1,200 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "type": "tab",
+        "createdDate": "2026-05-22T14:29:56.525Z",
+        "label": "postClaim",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "postClaim",
+        "relativeParentPath": ""
+    },
+    {
+        "id": "sd_HTjLeJzff06gMPXm",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "claimStart",
+        "path": "/claim",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 105,
+        "y": 200,
+        "wires": [
+            [
+                "sd_mfHIuhCYJN0JfmX6"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "postClaim",
+        "functionName": "sd_HTjLeJzff06gMPXm"
+    },
+    {
+        "id": "sd_mfHIuhCYJN0JfmX6",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "claimQueryBody",
+        "script": " bh.local.body = bh.input.body;\n  bh.local.insertQuery = `\n      INSERT INTO claims (\n      case_number, policy_number, vehicle_make, vehicle_model, vehicle_year,\n      liability_pct, reserve_amount, deductible_recovery, recovery_applicable,\n      handler_decision, handler_remarks, supervisor_decision, supervisor_remarks, status\n  ) VALUES (\n      '${bh.local.body.case_number}',\n      '${bh.local.body.policy_number}',\n      '${bh.local.body.vehicle_make}',\n      '${bh.local.body.vehicle_model}',\n      ${bh.local.body.vehicle_year},\n      ${bh.local.body.liability_pct},\n      ${bh.local.body.reserve_amount},\n      ${bh.local.body.deductible_recovery},\n      ${bh.local.body.recovery_applicable},\n      '${bh.local.body.handler_decision}',\n      '${bh.local.body.handler_remarks}',\n      '${bh.local.body.supervisor_decision}',\n      '${bh.local.body.supervisor_remarks}',\n      '${bh.local.body.status}'\n  )\n  ON CONFLICT (case_number) DO UPDATE SET\n      handler_decision = EXCLUDED.handler_decision,\n      handler_remarks = EXCLUDED.handler_remarks,\n      supervisor_decision = EXCLUDED.supervisor_decision,\n      supervisor_remarks = EXCLUDED.supervisor_remarks,\n      reserve_amount = EXCLUDED.reserve_amount,\n      status = EXCLUDED.status\n  `;",
+        "functionName": "claimQueryBody",
+        "category": "Function",
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "sd_36rWtdJ74elBFwiX"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "postClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_36rWtdJ74elBFwiX",
+        "type": "ExecuteSql",
+        "z": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "insertClaimQuery",
+        "databaseConfig": "sd_NXdLAOeMJCyRLjWN",
+        "resultMap": {
+            "type": "bh.local",
+            "value": "rawResult"
+        },
+        "multipleQuery": "",
+        "singleQuery": {
+            "type": "bh.local",
+            "value": "insertQuery"
+        },
+        "inputs": 1,
+        "outputs": 1,
+        "params": [],
+        "dbType": "postgres",
+        "functionName": "insertClaimQuery",
+        "category": "Storage",
+        "x": 460,
+        "y": 200,
+        "wires": [
+            [
+                "sd_pkv5L0aVv7x9CE04"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "postClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_pkv5L0aVv7x9CE04",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "claimResponse",
+        "script": "bh.local.response = { success: true, message: \"Claim persisted successfully\" };",
+        "functionName": "claimResponse",
+        "category": "Function",
+        "x": 600,
+        "y": 200,
+        "wires": [
+            [
+                "sd_wDPliJkG0v4wQZVv"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "postClaim",
+        "generated": true
+    },
+    {
+        "id": "sd_wDPliJkG0v4wQZVv",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_zqi2nl0HUraj0RQ1",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "claimResponseOut",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "claimResponseOut",
+        "category": "HTTP",
+        "x": 740,
+        "y": 220,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "postClaim",
+        "generated": true
+    }
+]

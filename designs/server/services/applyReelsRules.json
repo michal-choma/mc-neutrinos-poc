@@ -1,0 +1,246 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "type": "tab",
+        "createdDate": "2026-05-26T13:00:22.077Z",
+        "label": "applyReelsRules",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "applyReelsRules",
+        "relativeParentPath": ""
+    },
+    {
+        "id": "sd_fcCCzs0wi4TUgerD",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "start",
+        "path": "/apply-reels-rules",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "sd_F4een9OWPnVVCXDT"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "applyReelsRules",
+        "functionName": "sd_fcCCzs0wi4TUgerD"
+    },
+    {
+        "id": "sd_F4een9OWPnVVCXDT",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "reels-body-with-token",
+        "script": "bh.local.policy_number = bh.input.body.policy_number;\nbh.local.reserve_amount = bh.input.body.reserve_amount;\nbh.local.claim_type = bh.input.body.claim_type;\nbh.local.token = process.env.REELS_TOKEN;\n console.log('TOKEN:', process.env.REELS_TOKEN);\n\nbh.local.reelsBody = {\n    workflowId: process.env.REELS_RULE_ID,\n    version: process.env.REELS_VERSION,\n    inputObj: {\n      policy_number: bh.local.policy_number,\n      reserve_amount: bh.local.reserve_amount,\n      claim_type: bh.local.claim_type\n    }\n  };",
+        "functionName": "reelsBodyWithToken",
+        "category": "Function",
+        "x": 585,
+        "y": 240,
+        "wires": [
+            [
+                "sd_GlOxBnv1PijiNodk"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "applyReelsRules",
+        "generated": true
+    },
+    {
+        "id": "sd_GlOxBnv1PijiNodk",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "get-reels-reponse",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "__ssd__env__process.env.REELS_URL__ssd__env__end",
+        "urlMappingObj": {
+            "mapVarType": "process.env",
+            "mapVarValue": "REELS_URL"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.reelsBody",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "reelsBody"
+        },
+        "resultMapping": "bh.local.reelsResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "reelsResponse"
+        },
+        "headers": {
+            "token": "15a3a8ad-aa26-4d02-b466-ae3946ab4828.15d9d06aa6252fea433a2de152b2254ec6afec3cf34acdc015f1286e40445a7f"
+        },
+        "headersObj": [
+            {
+                "key": "token",
+                "defaultValue": "15a3a8ad-aa26-4d02-b466-ae3946ab4828.15d9d06aa6252fea433a2de152b2254ec6afec3cf34acdc015f1286e40445a7f"
+            }
+        ],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": {},
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": {},
+        "useAuthToken": "bh.local.token",
+        "useAuthTokenMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "token"
+        },
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "getReelsReponse",
+        "category": "HTTP",
+        "x": 840,
+        "y": 260,
+        "wires": [
+            [
+                "sd_XPqRDCqsaZsnuMy0"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "applyReelsRules",
+        "generated": true
+    },
+    {
+        "id": "sd_XPqRDCqsaZsnuMy0",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "result",
+        "script": "bh.local.response = {\n    vehicle_make: bh.local.reelsResponse.payload.result.vehicle_make,\n    vehicle_model: bh.local.reelsResponse.payload.result.vehicle_model,\n    vehicle_year: bh.local.reelsResponse.payload.result.vehicle_year,\n    vehicle_body_type: bh.local.reelsResponse.payload.result.vehicle_body_type,\n    needs_supervisor: bh.local.reelsResponse.payload.result.needs_supervisor,\n    recovery_applicable: bh.local.reelsResponse.payload.result.recovery_applicable,\n    deductible_amount: bh.local.reelsResponse.payload.result.deductible_amount\n  };",
+        "functionName": "result",
+        "category": "Function",
+        "x": 1000,
+        "y": 280,
+        "wires": [
+            [
+                "sd_ZFGhQ1eem1Dgjb2r"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "applyReelsRules",
+        "generated": true
+    },
+    {
+        "id": "sd_ZFGhQ1eem1Dgjb2r",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_LseaETuRF11YZYdA",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "out",
+        "category": "HTTP",
+        "x": 1140,
+        "y": 280,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "applyReelsRules",
+        "generated": true
+    }
+]

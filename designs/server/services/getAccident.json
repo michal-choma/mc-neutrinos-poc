@@ -1,0 +1,200 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "type": "tab",
+        "createdDate": "2026-05-22T10:47:46.215Z",
+        "label": "getAccident",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "getAccident",
+        "relativeParentPath": ""
+    },
+    {
+        "id": "sd_aJPx0iW175V5m6vH",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "getAccident",
+        "path": "/accident",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "get",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 180,
+        "y": 160,
+        "wires": [
+            [
+                "sd_uW3LNpWtUNc2pAKj"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "getAccident",
+        "functionName": "sd_aJPx0iW175V5m6vH"
+    },
+    {
+        "id": "sd_uW3LNpWtUNc2pAKj",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "getAccidentScript",
+        "script": "bh.local.caseNumber = bh.input.query.case_number;\nbh.local.accidentQuery = `\n    SELECT a.case_number, a.location, a.city, a.call_date,\n           p.party_order, p.name, p.car_make, p.car_model,\n           p.car_mfg_year, p.plate_no, p.liability_pct,\n           p.recovery, p.policy_number, p.insurance_company\n    FROM accidents a\n    JOIN parties p ON p.accident_id = a.id\n    WHERE a.case_number = '${bh.local.caseNumber}'\n    ORDER BY p.party_order\n  `;",
+        "functionName": "getAccidentScript",
+        "category": "Function",
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "sd_zfzx3E2iLk3DjhdR"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getAccident",
+        "generated": true
+    },
+    {
+        "id": "sd_zfzx3E2iLk3DjhdR",
+        "type": "ExecuteSql",
+        "z": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "getAccidentSQL",
+        "databaseConfig": "sd_NXdLAOeMJCyRLjWN",
+        "resultMap": {
+            "type": "bh.local",
+            "value": "rawResult"
+        },
+        "multipleQuery": "",
+        "singleQuery": {
+            "type": "bh.local",
+            "value": "accidentQuery"
+        },
+        "inputs": 1,
+        "outputs": 1,
+        "params": [],
+        "dbType": "postgres",
+        "functionName": "getAccidentSql",
+        "category": "Storage",
+        "x": 520,
+        "y": 180,
+        "wires": [
+            [
+                "sd_2Vr77k3WVKgVLJUB"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getAccident",
+        "generated": true
+    },
+    {
+        "id": "sd_2Vr77k3WVKgVLJUB",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "mapResult",
+        "script": "const rows = bh.local.rawResult;\nconst first = rows[0];\n\n  bh.local.response = {\n      case_number: first.case_number,\n      location: first.location,\n      city: first.city,\n      call_date: first.call_date,\n      parties: rows.map(r => ({\n          party_order: r.party_order,\n          name: r.name,\n          car_make: r.car_make,\n          car_model: r.car_model,\n          car_mfg_year: r.car_mfg_year,\n          plate_no: r.plate_no,\n          liability_pct: r.liability_pct,\n          recovery: r.recovery,\n          policy_number: r.policy_number,\n          insurance_company: r.insurance_company\n      }))\n  };",
+        "functionName": "mapResult",
+        "category": "Function",
+        "x": 660,
+        "y": 180,
+        "wires": [
+            [
+                "sd_TcNKihyuVGeNBzUb"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getAccident",
+        "generated": true
+    },
+    {
+        "id": "sd_TcNKihyuVGeNBzUb",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_Aq1a0vNGnUaDEzK2",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "accidentResult",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "accidentResult",
+        "category": "HTTP",
+        "x": 825,
+        "y": 180,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "getAccident",
+        "generated": true
+    }
+]
